@@ -1,0 +1,12 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://fhok:Iam@Passw0Rd@localhost:27017/commit_wealth?authSource=admin
+      uuid-representation: standard
+
+mongock:
+  migration-scan-package:
+    - be.commit_wealth.migrations
+
+server:
+  port: 8082

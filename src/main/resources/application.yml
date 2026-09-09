@@ -1,8 +1,9 @@
 spring:
-  data:
-    mongodb:
-      uri: mongodb://fhok:Iam@Passw0Rd@localhost:27017/commit_wealth?authSource=admin
-      uuid-representation: standard
+  application:
+    name: commit-wealth-service
+  mongodb:
+    uri: mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB}?authSource=admin
+    auto-index-creation: true
 
 mongock:
   migration-scan-package:

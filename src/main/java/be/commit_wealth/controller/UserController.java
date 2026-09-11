@@ -1,6 +1,7 @@
 package be.commit_wealth.controller;
 
 import be.commit_wealth.dto.UserRegistrationRequest;
+import be.commit_wealth.dto.UserRegistrationResponse;
 import be.commit_wealth.model.User;
 import be.commit_wealth.repository.UserRepository;
 import be.commit_wealth.services.UserService;
@@ -23,8 +24,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@Valid @RequestBody UserRegistrationRequest request) {
-        User user = userService.registerUser(request);
+    public ResponseEntity<UserRegistrationResponse> register(@Valid @RequestBody UserRegistrationRequest request) {
+        UserRegistrationResponse user = userService.registerUser(request);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 

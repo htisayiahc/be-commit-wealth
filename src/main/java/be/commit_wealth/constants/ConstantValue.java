@@ -11,9 +11,14 @@ public final class ConstantValue {
 
     public static final String USERNAME_CONSTRAINT_ERROR_MESSAGE = "Username must contain only A-Z, a-z, 0-9, -, _, .";
     public static final String USERNAME_BELOW_MINIMUM_ERROR_MESSAGE = "Username is required";
+    public static final String USERNAME_EXISTS_ERROR_MESSAGE = "Username already exists";
+
     public static final String PASSWORD_BLANK_ERROR_MESSAGE = "Password is required";
     public static final String PASSWORD_BELOW_MINIMUM_ERROR_MESSAGE = "Password must be at least " + PASSWORD_MIN_LENGTH + " characters long";
     public static final String PASSWORD_CONSTRAIN_ERROR_MESSAGE = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character";
+
     public static final String EMAIL_CONSTRAIN_ERROR_MESSAGE = "Email should be like username@email.com";
+    public static final String EMAIL_EXISTS_ERROR_MESSAGE = "Email already exists";
+
     public static final String DATE_TIME_CONSTRAIN_ERROR_MESSAGE = "Datetime must be YYYY-MM-DDTHH:mm:ss format";
 }

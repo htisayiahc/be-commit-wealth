@@ -2,6 +2,7 @@ package be.commit_wealth.services;
 
 import be.commit_wealth.constants.ConstantValue;
 import be.commit_wealth.dto.UserRegistrationRequest;
+import be.commit_wealth.dto.UserRegistrationResponse;
 import be.commit_wealth.model.User;
 import be.commit_wealth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User registerUser(UserRegistrationRequest request) {
+    public UserRegistrationResponse registerUser(UserRegistrationRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new RuntimeException(ConstantValue.USERNAME_EXISTS_ERROR_MESSAGE);
         }
@@ -26,6 +27,8 @@ public class UserService {
 
         User user = new User(request);
         user.setId(UUID.randomUUID());
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        return UserRegistrationResponse.fromEntity(savedUser);
     }
 }

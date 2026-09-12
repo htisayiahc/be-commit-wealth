@@ -8,6 +8,8 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     Optional<User> findByUsername(String username);
 
+    Optional<User> findByUsernameAndPassword(String username, String password);
+
     // Custom query method generated automatically by Spring Data
     Optional<User> findByEmail(String email);
 }

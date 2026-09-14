@@ -6,11 +6,15 @@ import be.commit_wealth.dto.LoginResponse;
 import be.commit_wealth.dto.UserRegistrationRequest;
 import be.commit_wealth.dto.UserRegistrationResponse;
 import be.commit_wealth.exception.InvalidCredentialsException;
+import be.commit_wealth.model.CustomUserDetails;
 import be.commit_wealth.model.User;
 import be.commit_wealth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +26,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final AuthenticationManager authenticationManager;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserRepository userRepository;
+    private final JWTService jwtService;
 
     public UserRegistrationResponse registerUser(UserRegistrationRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
@@ -43,25 +49,26 @@ public class UserService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        User user = userRepository.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> {
-                    log.warn("Authentication failed: User '{}' not found", loginRequest.getUsername());
-                    return new InvalidCredentialsException("Wrong Username or password");
-                });
 
-        boolean isCorrectPassword = passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
 
-        if(!isCorrectPassword) {
-            log.warn("Wrong password");
-            throw new InvalidCredentialsException("Wrong Username or password");
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        if (userDetails == null) {
+            throw new InvalidCredentialsException(ConstantValue.USER_ERROR_MESSAGE);
         }
 
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setUsername(user.getUsername());
-        loginResponse.setJwtToken("JWT Token");
+        String jwtToken = jwtService.generateToken(userDetails);
 
-        return loginResponse;
+        LoginResponse response = LoginResponse.builder()
+                .username(userDetails.getUsername())
+                .jwtToken(jwtToken)
+                .build();
+
+        return response;
     }
-
-
 }

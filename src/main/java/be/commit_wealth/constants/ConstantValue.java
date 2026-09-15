@@ -14,6 +14,7 @@ public final class ConstantValue {
     public static final String USERNAME_EXISTS_ERROR_MESSAGE = "Username already exists";
     public static final String USERNAME_NOT_FOUND_ERROR_MESSAGE = "User not found with username: ";
     public static final String USER_ERROR_MESSAGE = "User not found";
+    public static final String USERNAME_OR_PASSWORD_ERROR_MESSAGE = "Username or password is incorrect";
 
     public static final String PASSWORD_BLANK_ERROR_MESSAGE = "Password is required";
     public static final String PASSWORD_BELOW_MINIMUM_ERROR_MESSAGE = "Password must be at least " + PASSWORD_MIN_LENGTH + " characters long";

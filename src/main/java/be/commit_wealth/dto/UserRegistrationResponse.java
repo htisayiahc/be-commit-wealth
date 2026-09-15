@@ -9,9 +9,9 @@ import java.util.UUID;
 @Value
 @Builder
 public class UserRegistrationResponse {
-    UUID userId;
+    private UUID userId;
 
-    String username;
+    private String username;
 
     public static UserRegistrationResponse fromEntity(User user) {
         return UserRegistrationResponse.builder()

@@ -33,10 +33,12 @@ public class UserService {
 
     public UserRegistrationResponse registerUser(UserRegistrationRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            log.warn("User with name {} already exists", request.getUsername());
             throw new RuntimeException(ConstantValue.USERNAME_EXISTS_ERROR_MESSAGE);
         }
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            log.warn("User with email {} already exists", request.getEmail());
             throw new RuntimeException(ConstantValue.EMAIL_EXISTS_ERROR_MESSAGE);
         }
 
@@ -49,7 +51,7 @@ public class UserService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-
+        log.info("Login Request: {}", loginRequest.getUsername());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(),
@@ -59,16 +61,15 @@ public class UserService {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         if (userDetails == null) {
-            throw new InvalidCredentialsException(ConstantValue.USER_ERROR_MESSAGE);
+            log.warn("Invalid username or password");
+            throw new InvalidCredentialsException(ConstantValue.USERNAME_OR_PASSWORD_ERROR_MESSAGE);
         }
 
         String jwtToken = jwtService.generateToken(userDetails);
 
-        LoginResponse response = LoginResponse.builder()
+        return LoginResponse.builder()
                 .username(userDetails.getUsername())
                 .jwtToken(jwtToken)
                 .build();
-
-        return response;
     }
 }

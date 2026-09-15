@@ -41,20 +41,16 @@ public class RegistrationValidator implements ConstraintValidator<RegistrationVa
             isValid = false;
         }
 
-        if(value.getBirthdayDate() == null) {
-            context.buildConstraintViolationWithTemplate(ConstantValue.EMAIL_CONSTRAIN_ERROR_MESSAGE)
-                    .addPropertyNode("birthdayDate")
-                    .addConstraintViolation();
-            isValid = false;
-        }
 
-        try {
-            DateConverter.convertStringToDateTime(value.getBirthdayDate(), ConstantValue.DATE_TIME_PATTERN);
-        } catch (RuntimeException e) {
-            context.buildConstraintViolationWithTemplate(ConstantValue.DATE_TIME_CONSTRAIN_ERROR_MESSAGE)
-                    .addPropertyNode("birthdayDate")
-                    .addConstraintViolation();
-            isValid = false;
+        if(value.getBirthdayDate() == null) {
+            try {
+                DateConverter.convertStringToDateTime(value.getBirthdayDate(), ConstantValue.DATE_TIME_PATTERN);
+            } catch (RuntimeException e) {
+                context.buildConstraintViolationWithTemplate(ConstantValue.DATE_TIME_CONSTRAIN_ERROR_MESSAGE)
+                        .addPropertyNode("birthdayDate")
+                        .addConstraintViolation();
+                isValid = false;
+            }
         }
 
         return isValid;

@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -17,9 +14,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class WalletController {
 
-    @GetMapping("/me")
+    @PostMapping("/me")
     public ResponseEntity<String> getWallets(@AuthenticationPrincipal UserDetails userDetails) {
-        log.info("Getting wallets for user {}", userDetails.getUsername());
+        log.info("Getting wallet for user {}", userDetails.getUsername());
         return new ResponseEntity<>("Wallet", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/list")
+    public ResponseEntity<?> getListWallets(@AuthenticationPrincipal UserDetails userDetails) {
+        log.info("Getting wallets for user {}", userDetails.getUsername());
+        return new ResponseEntity<>("Wallets", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createWallet(@AuthenticationPrincipal UserDetails userDetails) {
+        log.info("Creating wallet for user {}", userDetails.getUsername());
+        return new ResponseEntity<>("Wallet", HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/update")
+    public ResponseEntity<?> updateWallet(@AuthenticationPrincipal UserDetails userDetails) {
+        log.info("Updating wallet for user {}", userDetails.getUsername());
+        return new ResponseEntity<>("Wallet", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteWallet(@AuthenticationPrincipal UserDetails userDetails) {
+        log.info("Deleting wallet for user {}", userDetails.getUsername());
     }
 }

@@ -6,7 +6,7 @@ public final class ConstantValue {
     public static final String ALLOWED_SPECIAL_CHARACTERS = "!@#$%^&*()?/\\+-=<>~[]{}|_";
     public static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\Q" + ALLOWED_SPECIAL_CHARACTERS + "\\E]).*$";
     public static final int PASSWORD_MIN_LENGTH = 8;
-    public static final String EMAIL_PATTERN = "^[a-zA-Z0-9_+&*-]+(?:\\\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,7}$";
+    public static final String EMAIL_PATTERN = "^[a-zA-Z0-9_+&*-]+(?:\\\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
     public static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
 
     public static final String USERNAME_CONSTRAINT_ERROR_MESSAGE = "Username must contain only A-Z, a-z, 0-9, -, _, .";

@@ -38,8 +38,11 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/v1/users/*").permitAll()
-                                .anyRequest().authenticated()
+                        .requestMatchers(
+                                "/api/v1/users/register",
+                                "/api/v1/users/login"
+                        ).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 👈 สำคัญ: ไม่ใช้ Session

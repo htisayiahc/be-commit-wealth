@@ -34,7 +34,7 @@ public class RegistrationValidator implements ConstraintValidator<RegistrationVa
             isValid = false;
         }
 
-        if(value.getEmail() == null || value.getEmail().matches(ConstantValue.EMAIL_PATTERN)) {
+        if(value.getEmail() == null || !value.getEmail().matches(ConstantValue.EMAIL_PATTERN)) {
             context.buildConstraintViolationWithTemplate(ConstantValue.EMAIL_CONSTRAIN_ERROR_MESSAGE)
                     .addPropertyNode("email") // <--- หัวใจสำคัญอยู่ตรงนี้!
                     .addConstraintViolation();
@@ -42,7 +42,7 @@ public class RegistrationValidator implements ConstraintValidator<RegistrationVa
         }
 
 
-        if(value.getBirthdayDate() == null) {
+        if(value.getBirthdayDate() != null) {
             try {
                 DateConverter.convertStringToDateTime(value.getBirthdayDate(), ConstantValue.DATE_TIME_PATTERN);
             } catch (RuntimeException e) {

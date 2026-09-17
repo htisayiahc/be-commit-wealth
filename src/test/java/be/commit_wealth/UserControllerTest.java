@@ -2,6 +2,8 @@ package be.commit_wealth;
 
 import be.commit_wealth.constants.ConstantValue;
 import be.commit_wealth.controller.UserController;
+import be.commit_wealth.dto.LoginRequest;
+import be.commit_wealth.dto.LoginResponse;
 import be.commit_wealth.dto.UserRegistrationRequest;
 import be.commit_wealth.dto.UserRegistrationResponse;
 import be.commit_wealth.model.User;
@@ -11,15 +13,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,7 +25,6 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(
@@ -173,6 +168,48 @@ public class UserControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(request))
                 )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Login success")
+    void testLoginSuccess() throws Exception {
+        LoginRequest loginRequest;
+        LoginResponse loginResponse;
+
+        loginRequest = new LoginRequest();
+        loginRequest.setUsername("testUser");
+        loginRequest.setPassword("testPassword");
+
+        loginResponse = LoginResponse.builder()
+                .username("testUser")
+                .jwtToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+                .build();
+
+        when(userService.login(any(LoginRequest.class))).thenReturn(loginResponse);
+        mockMvc.perform(post("/api/v1/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"testUser\",\"password\":\"testPassword\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Login fail")
+    void testLoginFailure() throws Exception {
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setUsername("testUser");
+        loginRequest.setPassword("testPassword");
+
+        LoginResponse loginResponse = LoginResponse.builder()
+                .username("testUser")
+                .jwtToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+                .build();
+
+        when(userService.login(any(LoginRequest.class))).thenThrow(new RuntimeException("Invalid username or password"));
+
+        mockMvc.perform(post("/api/v1/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"testUser\",\"password\":\"wrongPassword\"}"))
                 .andExpect(status().isBadRequest());
     }
 }
